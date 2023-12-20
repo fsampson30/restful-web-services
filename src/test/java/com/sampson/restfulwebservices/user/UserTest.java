@@ -1,11 +1,11 @@
 package com.sampson.restfulwebservices.user;
 
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
 
@@ -19,19 +19,19 @@ class UserTest {
 
     @Test
     public void validateTypes(){
-        Assertions.assertInstanceOf(Integer.class,user.getId());
-        Assertions.assertInstanceOf(String.class, user.getName());
-        Assertions.assertInstanceOf(LocalDate.class, user.getBirthDate());
+        assertInstanceOf(Integer.class,user.getId());
+        assertInstanceOf(String.class, user.getName());
+        assertInstanceOf(LocalDate.class, user.getBirthDate());
     }
 
     @Test
     public void testNameSize(){
-        Assertions.assertNotEquals(0,user.getName().length());
+        assertNotEquals(0,user.getName().length());
     }
 
     @Test
     public void testBirthDate(){
-        Assertions.assertTrue(user.getBirthDate().isBefore(LocalDate.now()));
+        assertTrue(user.getBirthDate().isBefore(LocalDate.now()),"Date should br in the past");
     }
 
 

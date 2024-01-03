@@ -9,29 +9,30 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserResource {
 
-    private UserDaoService userDaoService;
+    private UserRepository userRepository;
 
-    public UserResource(UserDaoService userDaoService) {
-        this.userDaoService = userDaoService;
+    public UserResource(UserRepository userRepository) {
+            this.userRepository = userRepository;
     }
 
     @GetMapping("/users")
     public List<User> retrieveAllUsers(){
-        return userDaoService.findAll();
+        return userRepository.findAll();
     }
 
     @GetMapping("/users/{id}")
-    public EntityModel<User> retrieveUser(@PathVariable int id){
-        User user = userDaoService.findOne(id);
-        if (user==null){
+    public EntityModel<Optional<User>> retrieveUser(@PathVariable int id){
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()){
             throw new UserNotFoundException("id:"+id);
         }
 
-        EntityModel<User> entityModel = EntityModel.of(user);
+        EntityModel<Optional<User>> entityModel = EntityModel.of(user);
         WebMvcLinkBuilder linkBuilder = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).retrieveAllUsers());
         entityModel.add(linkBuilder.withRel("all-users"));
 
@@ -40,12 +41,12 @@ public class UserResource {
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable int id){
-        userDaoService.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     @PostMapping("/users")
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user){
-        User savedUser = userDaoService.createUser(user);
+        User savedUser = userRepository.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(location).build();
     }

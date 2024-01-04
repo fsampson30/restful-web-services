@@ -1,5 +1,6 @@
 package com.sampson.restfulwebservices.user;
 
+import com.sampson.restfulwebservices.post.Post;
 import jakarta.validation.Valid;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -49,5 +50,14 @@ public class UserResource {
         User savedUser = userRepository.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/users/{id}/posts")
+    public List<Post> retrievePostsForUser(@PathVariable int id){
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()){
+            throw new UserNotFoundException("id:"+id);
+        }
+        return user.get().getPosts();
     }
 }

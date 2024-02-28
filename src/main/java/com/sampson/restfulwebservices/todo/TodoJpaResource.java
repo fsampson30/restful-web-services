@@ -5,18 +5,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
-public class TodoResource {
+@RestController
+public class TodoJpaResource {
 
     private TodoService todoService;
 
-    public TodoResource(TodoService todoService) {
+    private TodoRepository todoRepository;
+
+    public TodoJpaResource(TodoService todoService, TodoRepository todoRepository) {
         this.todoService = todoService;
+        this.todoRepository = todoRepository;
     }
 
     @GetMapping("/users/{username}/todos")
     public List<Todo> retrieveAllTodos(@PathVariable String username){
-        return todoService.findByUsername(username);
+        return todoRepository.findByUsername(username);
     }
 
     @GetMapping("/users/{username}/todos/{id}")

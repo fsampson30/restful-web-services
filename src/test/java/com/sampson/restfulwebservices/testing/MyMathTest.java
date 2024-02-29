@@ -9,12 +9,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MyMathTest {
 
+    private MyMath math = new MyMath();
+
     @Test
     void calculateSum() {
-        int[] numbers = {1,2,3};
-        MyMath math = new MyMath();
-        int result = math.calculateSum(numbers);
-        assertEquals(6,result);
+        assertEquals(6, math.calculateSum(new int[]{1,2,3}));
+    }
 
+    @Test
+    void calculateSumEqualsZero() {
+        assertEquals(0, math.calculateSum(new int[]{}));
     }
 }
